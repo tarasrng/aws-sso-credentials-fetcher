@@ -4,6 +4,7 @@ import org.apache.commons.lang3.SystemUtils
 
 import java.awt.*
 import java.awt.datatransfer.Clipboard
+import java.awt.datatransfer.DataFlavor
 import java.awt.datatransfer.StringSelection
 import java.awt.event.KeyEvent
 
@@ -15,7 +16,8 @@ class ChromeController {
     private Robot robot = new Robot()
 
     def toggleConsole() {
-        println 'Trying to toggle chrome console'
+        def action = isConsoleOpened ? 'close' : 'open'
+        println "Trying to $action chrome console"
         robot.keyPress(COMMAND_OR_CONTROL)
         robot.keyPress(OPTIONS_OR_SHIFT)
         robot.keyPress(KeyEvent.VK_J)
@@ -69,6 +71,38 @@ class ChromeController {
         robot.keyRelease(KeyEvent.VK_OPEN_BRACKET)
         robot.keyRelease(COMMAND_OR_CONTROL)
         Thread.sleep(400)
+    }
+
+    boolean checkIfPageIsCorrect() {
+        String copyCheckResultToClipboardJQuery = """
+var test = \$('#cli_login_button') != null;
+ var dummy = document.createElement("textarea");
+    document.body.appendChild(dummy);
+    dummy.value = test;
+    dummy.select();
+    document.execCommand("copy");
+    document.body.removeChild(dummy);
+"""
+        println 'Checking the page'
+
+        StringSelection stringSelection = new StringSelection(copyCheckResultToClipboardJQuery)
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard()
+        clipboard.setContents(stringSelection, stringSelection)
+
+        robot.keyPress(COMMAND_OR_CONTROL)
+        robot.keyPress(KeyEvent.VK_V)
+        robot.keyRelease(KeyEvent.VK_V)
+        robot.keyRelease(COMMAND_OR_CONTROL)
+        Thread.sleep(100)
+        robot.keyPress(KeyEvent.VK_ENTER)
+        robot.keyRelease(KeyEvent.VK_ENTER)
+        Thread.sleep(200)
+
+        String clipboardData = (String) Toolkit.getDefaultToolkit()
+                .getSystemClipboard().getData(DataFlavor.stringFlavor)
+        def result = 'true' == clipboardData
+        println("On the right auth page - $result")
+        result
     }
 
 }

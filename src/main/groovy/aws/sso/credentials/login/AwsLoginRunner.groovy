@@ -1,6 +1,10 @@
 package aws.sso.credentials.login
 
 class AwsLoginRunner {
+    private final static long MAX_SSO_LOGIN_WAIT_TIME_MILLIS = 90_000
+    private final static long WAIT_TIME_BEFORE_AUTO_CLICKING_AUTH_BUTTON_MILLIS = 15_000
+    private final static long PAGE_CHECKING_RETRY_DELAY_MILLIS = 8_000
+
     def runSSOLogin() {
         def executionOutput = new StringBuilder(), executionErrors = new StringBuilder()
         println 'Executing aws sso login to cache access token'
@@ -11,7 +15,7 @@ class AwsLoginRunner {
             clickAuthorizeInBrowser()
         }
 
-        proc.waitForOrKill(30_000)
+        proc.waitForOrKill(MAX_SSO_LOGIN_WAIT_TIME_MILLIS)
         //wait for click task to finish
         Thread.sleep(4_000)
         clickAuthorizeButtonTask.interrupt()
@@ -30,7 +34,7 @@ class AwsLoginRunner {
 
     private def clickAuthorizeInBrowser() {
         boolean interrupted = false
-        sleep(10_000) { e ->
+        sleep(WAIT_TIME_BEFORE_AUTO_CLICKING_AUTH_BUTTON_MILLIS) { e ->
             assert e in InterruptedException
             println 'Authorized button was pressed manually'
             interrupted = true
@@ -41,6 +45,17 @@ class AwsLoginRunner {
         }
         def chromeController = new ChromeController()
         chromeController.toggleConsole()
+        boolean pageIsCorrect = chromeController.checkIfPageIsCorrect()
+        if (!pageIsCorrect) {
+            chromeController.toggleConsole()
+            Thread.sleep(PAGE_CHECKING_RETRY_DELAY_MILLIS)
+            chromeController.toggleConsole()
+            pageIsCorrect = chromeController.checkIfPageIsCorrect()
+        }
+        if (!pageIsCorrect) {
+            println 'Few page checks failed. Can\'t automate authorize button click. '
+            return
+        }
         chromeController.clickAuthButton()
         chromeController.toggleConsole()
         chromeController.closeCurrentTab()
