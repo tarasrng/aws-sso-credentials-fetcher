@@ -1,0 +1,22 @@
+apply plugin: 'groovy'
+apply plugin: 'application'
+version = '1.0'
+mainClassName='aws.sso.credentials.AwsCredentialsResolver'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+	compile 'org.codehaus.groovy:groovy-all:3.0.3'
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.10'
+}
+
+task uberjar(type: Jar, dependsOn:compileGroovy) {
+    from files(sourceSets.main.java.outputDir, sourceSets.main.groovy.outputDir)
+    from configurations.runtime.asFileTree.files.collect { zipTree(it) }
+
+    manifest {
+        attributes 'Main-Class': mainClassName
+    }
+}
