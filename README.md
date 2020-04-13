@@ -21,4 +21,4 @@ Default profile is used
 
 **Build and run:**
 *  gradle uberjar
-*  java -jar build/libs/aws-credentials-resolver-1.0.jar
+*  java -jar build/libs/aws-sso-credentials-fetcher-1.0.jar

@@ -1,7 +1,7 @@
 apply plugin: 'groovy'
 apply plugin: 'application'
 version = '1.0'
-mainClassName='aws.sso.credentials.AwsCredentialsResolver'
+mainClassName='aws.sso.credentials.AwsSSOCredentialsFetcher'
 
 repositories {
     mavenCentral()
