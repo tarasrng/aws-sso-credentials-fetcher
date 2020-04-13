@@ -1,6 +1,6 @@
 AWS SSO Credentials Fetcher 
 =========================
-### Automates retrieving AWS SSO credentials that should be re-newed every 12 hours for CLI and programmatic access.
+### Automates retrieving of AWS SSO credentials that should be re-newed every 12 hours for CLI and programmatic access.
 
 
 
