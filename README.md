@@ -1,6 +1,6 @@
 AWS SSO Credentials Fetcher 
 =========================
-##### Automates retrieving AWS SSO credentials that should be re-newed every 12 hours for CLI and programmatic access.
+### Automates retrieving AWS SSO credentials that should be re-newed every 12 hours for CLI and programmatic access.
 
 
 
@@ -9,7 +9,7 @@ Runs `aws sso login` command (_to cache access token_), and then `aws sts get-ca
 
 If user doesn't click **Sign in to AWS CLI** button it will click it automatically and close a tab, so the app can be scheduled and run silently.
 
-###### !Note
+#### !Note
 
 Default profile is used
 
