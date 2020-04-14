@@ -13,7 +13,7 @@ If user doesn't click **Sign in to AWS CLI** button it will click it automatical
 
 Default profile is used
 
-Currently pushing Auth button automatically is implemented for Chrome browser only
+Currently, clicking on Auth button automatically is implemented for Chrome browser only
 
 #### Preconditions:
 
