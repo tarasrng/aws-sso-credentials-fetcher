@@ -15,7 +15,7 @@ Default profile is used
 
 Currently, clicking on Auth button automatically is implemented for Chrome browser only
 
-#### Preconditions:
+#### Prerequisites:
 
 - Java
 - AWS CLI V2
