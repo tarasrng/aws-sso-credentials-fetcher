@@ -1,0 +1,1 @@
+java -jar aws-sso-credentials-fetcher/build/libs/aws-sso-credentials-fetcher-1.0.jar ssoConsoleUrl=https://url-that-logs-in-to-console-automatically

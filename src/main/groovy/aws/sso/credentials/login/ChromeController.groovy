@@ -73,7 +73,7 @@ class ChromeController {
         Thread.sleep(400)
     }
 
-    boolean checkIfPageIsCorrect() {
+    boolean checkIfAuthPageIsCorrect() {
         String copyCheckResultToClipboardJQuery = """
 var test = \$('#cli_login_button') != null;
  var dummy = document.createElement("textarea");
@@ -102,6 +102,38 @@ var test = \$('#cli_login_button') != null;
                 .getSystemClipboard().getData(DataFlavor.stringFlavor)
         def result = 'true' == clipboardData
         println("On the right auth page - $result")
+        result
+    }
+
+    boolean checkIfConsolePageIsCorrect() {
+        String copyCheckResultToClipboardJQuery = """
+var test = document.getElementsByClassName("awsui").length > 0;
+ var dummy = document.createElement("textarea");
+    document.body.appendChild(dummy);
+    dummy.value = test;
+    dummy.select();
+    document.execCommand("copy");
+    document.body.removeChild(dummy);
+"""
+        println 'Checking the page'
+
+        StringSelection stringSelection = new StringSelection(copyCheckResultToClipboardJQuery)
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard()
+        clipboard.setContents(stringSelection, stringSelection)
+
+        robot.keyPress(COMMAND_OR_CONTROL)
+        robot.keyPress(KeyEvent.VK_V)
+        robot.keyRelease(KeyEvent.VK_V)
+        robot.keyRelease(COMMAND_OR_CONTROL)
+        Thread.sleep(100)
+        robot.keyPress(KeyEvent.VK_ENTER)
+        robot.keyRelease(KeyEvent.VK_ENTER)
+        Thread.sleep(200)
+
+        String clipboardData = (String) Toolkit.getDefaultToolkit()
+                .getSystemClipboard().getData(DataFlavor.stringFlavor)
+        def result = 'true' == clipboardData
+        println("On the right console page - $result")
         result
     }
 
