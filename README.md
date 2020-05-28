@@ -24,6 +24,8 @@ Currently, clicking on Auth button automatically is implemented for Chrome brows
 **Build and run:**
 *  gradle uberjar
 *  java -jar build/libs/aws-sso-credentials-fetcher-1.0.jar
+
+
 *  To login to AWS console as well, specify the url that will be opened automatically in `ssoConsoleUrl.txt` file
 *  The url can be found on sso portal page
 *  To leave console opened after login to console use `leaveConsoleOpened` param
