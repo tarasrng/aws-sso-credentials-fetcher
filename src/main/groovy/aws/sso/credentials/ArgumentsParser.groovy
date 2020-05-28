@@ -19,7 +19,7 @@ class ArgumentsParser {
         def ssoConsoleUrlFile = new File('ssoConsoleUrl.txt')
         if (ssoConsoleUrlFile.exists()) {
             def ssoConsoleUrl = ssoConsoleUrlFile.text
-            if (ssoConsoleUrl) {
+            if (ssoConsoleUrl && (ssoConsoleUrl.startsWith('http') || ssoConsoleUrl.startsWith('https'))) {
                 return ssoConsoleUrl
             }
         }

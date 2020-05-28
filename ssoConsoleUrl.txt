@@ -1,1 +1,1 @@
-https://url-that-logs-in-to-console-automatically
+Insert a url starting with http or https here. Example: https://url-that-logs-in-to-console-automatically
