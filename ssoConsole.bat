@@ -1,1 +1,1 @@
-java -jar aws-sso-credentials-fetcher/build/libs/aws-sso-credentials-fetcher-1.0.jar skipProg leaveConsoleOpened
+java -jar build/libs/aws-sso-credentials-fetcher-1.0.jar skipProg leaveConsoleOpened
