@@ -1,7 +1,5 @@
 package aws.sso.credentials
 
-import org.apache.commons.lang3.StringUtils
-
 class ArgumentsParser {
     final String[] args
 
@@ -13,23 +11,28 @@ class ArgumentsParser {
         return findArgByName("skipProg") != null
     }
 
+    boolean shouldSkipLoginToConsole() {
+        return findArgByName("skipConsole") != null
+    }
+
     String getSSOConsoleUrl() {
-        String ssoConsoleUrl = findArgByName("ssoConsoleUrl", true)
-        if (!ssoConsoleUrl || !ssoConsoleUrl.contains("=")) {
-            return null
-        } else {
-            return StringUtils.substringAfter(ssoConsoleUrl, "=")
+        def ssoConsoleUrlFile = new File('ssoConsoleUrl.txt')
+        if (ssoConsoleUrlFile.exists()) {
+            def ssoConsoleUrl = ssoConsoleUrlFile.text
+            if (ssoConsoleUrl) {
+                return ssoConsoleUrl
+            }
         }
+        return null
     }
 
     boolean doNotCloseConsole() {
         findArgByName("leaveConsoleOpened") != null
     }
 
-    String findArgByName(String name, boolean startsWith = false) {
+    String findArgByName(String name) {
         for (String arg in args) {
-            boolean found = startsWith ? arg.startsWith(name) : arg == name
-            if (found) {
+            if (arg == name) {
                 return arg
             }
         }

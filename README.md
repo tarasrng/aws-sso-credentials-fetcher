@@ -22,6 +22,8 @@ Default profile is used
 **Build and run:**
 *  gradle uberjar
 *  java -jar build/libs/aws-sso-credentials-fetcher-1.0.jar
-*  To login to AWS console as well, specify the url that will be automatically opened using `ssoConsoleUrl=` param
+*  To login to AWS console as well, specify the url that will be automatically opened in` ssoConsoleUrl.txt` file
 *  The url can be found on sso portal page
-*  To leave console opened after login use `leaveConsoleOpened` param
+*  To leave console opened after login to console use `leaveConsoleOpened` param
+*  To skip opening log in to console use `skipConsole` param
+*  To skip programmatic log in to console use `skipProg` param

@@ -1,1 +1,1 @@
-java -jar aws-sso-credentials-fetcher/build/libs/aws-sso-credentials-fetcher-1.0.jar skipProg leaveConsoleOpened ssoConsoleUrl=https://url-that-logs-in-to-console-automatically
+java -jar aws-sso-credentials-fetcher/build/libs/aws-sso-credentials-fetcher-1.0.jar skipProg leaveConsoleOpened
