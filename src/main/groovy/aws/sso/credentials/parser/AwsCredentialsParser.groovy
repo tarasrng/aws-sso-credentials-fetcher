@@ -1,12 +1,14 @@
 package aws.sso.credentials.parser
 
+import aws.sso.credentials.utils.LoggerResolver
+import ch.qos.logback.classic.Logger
 import groovy.json.JsonSlurper
 
 class AwsCredentialsParser {
-
+    private static Logger log = LoggerResolver.getLogger(AwsCredentialsParser.class)
     def parse() {
         def JSON = new JsonSlurper().parseText(resolveCachedCredentialsFile().text)
-        println 'Parsing cached credentials file'
+        log.info 'Parsing cached credentials file'
         def credentials = JSON.Credentials
         if (!credentials) {
             throw new RuntimeException("Could't parse credentials. " +
@@ -24,7 +26,7 @@ class AwsCredentialsParser {
 
     def saveCredentials(String credentialsContent) {
         def credentialsFile = resolveCredentialsFile()
-        println 'Saving credentials file'
+        log.info 'Saving credentials file'
         credentialsFile.text = credentialsContent
     }
 
@@ -36,19 +38,19 @@ class AwsCredentialsParser {
         def cachedCredsFile = resolveCacheDirectory().listFiles().sort {
             a, b -> b.lastModified() <=> a.lastModified()
         }.first()
-        println("Last modified cached credentials file: $cachedCredsFile")
+        log.info("Last modified cached credentials file: $cachedCredsFile")
         cachedCredsFile
     }
 
     File resolveCacheDirectory() {
         def cacheDirectory = System.getProperty("user.home") + "/.aws/cli/cache/"
-        println("CLI cache directory: ${cacheDirectory}")
+        log.info("CLI cache directory: ${cacheDirectory}")
         return new File(cacheDirectory)
     }
 
     File resolveAwsDirectory() {
         def awsDirectory = System.getProperty("user.home") + "/.aws/"
-        println("AWS directory: ${awsDirectory}")
+        log.info("AWS directory: ${awsDirectory}")
         return new File(awsDirectory)
     }
 }

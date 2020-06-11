@@ -1,5 +1,7 @@
 package aws.sso.credentials.login
 
+import aws.sso.credentials.utils.LoggerResolver
+import ch.qos.logback.classic.Logger
 import org.apache.commons.lang3.SystemUtils
 
 import java.awt.*
@@ -9,6 +11,8 @@ import java.awt.datatransfer.StringSelection
 import java.awt.event.KeyEvent
 
 class ChromeController {
+    private static Logger log = LoggerResolver.getLogger(ChromeController.class)
+
     private static final int COMMAND_OR_CONTROL = SystemUtils.IS_OS_MAC ? KeyEvent.VK_META : KeyEvent.VK_CONTROL
     private static final int OPTIONS_OR_SHIFT = SystemUtils.IS_OS_MAC ? 58 : KeyEvent.VK_SHIFT
 
@@ -17,7 +21,7 @@ class ChromeController {
 
     def toggleConsole() {
         def action = isConsoleOpened ? 'close' : 'open'
-        println "Trying to $action chrome console"
+        log.info "Trying to $action chrome console"
         robot.keyPress(COMMAND_OR_CONTROL)
         robot.keyPress(OPTIONS_OR_SHIFT)
         robot.keyPress(KeyEvent.VK_J)
@@ -33,7 +37,7 @@ class ChromeController {
     }
 
     def clickAuthButton() {
-        println 'Trying to click authorize button'
+        log.info 'Trying to click authorize button'
         String buttonPressJQuery = "\$('#cli_login_button').click()"
         StringSelection stringSelection = new StringSelection(buttonPressJQuery)
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard()
@@ -50,7 +54,7 @@ class ChromeController {
     }
 
     def closeCurrentTab() {
-        println 'Trying to close current tab'
+        log.info 'Trying to close current tab'
         robot.keyPress(COMMAND_OR_CONTROL)
         robot.keyPress(KeyEvent.VK_W)
         robot.keyRelease(KeyEvent.VK_W)
@@ -58,7 +62,7 @@ class ChromeController {
     }
 
     private def makeConsoleEditable() {
-        println 'Trying to make console editable'
+        log.info 'Trying to make console editable'
         robot.keyPress(COMMAND_OR_CONTROL)
         robot.keyPress(KeyEvent.VK_CLOSE_BRACKET)
 
@@ -83,7 +87,7 @@ var test = \$('#cli_login_button') != null;
     document.execCommand("copy");
     document.body.removeChild(dummy);
 """
-        println 'Checking the page'
+        log.info 'Checking the page'
 
         StringSelection stringSelection = new StringSelection(copyCheckResultToClipboardJQuery)
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard()
@@ -101,7 +105,7 @@ var test = \$('#cli_login_button') != null;
         String clipboardData = (String) Toolkit.getDefaultToolkit()
                 .getSystemClipboard().getData(DataFlavor.stringFlavor)
         def result = 'true' == clipboardData
-        println("On the right auth page - $result")
+        log.info("On the right auth page - $result")
         result
     }
 
@@ -115,7 +119,7 @@ var test = document.getElementsByClassName("awsui").length > 0;
     document.execCommand("copy");
     document.body.removeChild(dummy);
 """
-        println 'Checking the page'
+        log.info 'Checking the page'
 
         StringSelection stringSelection = new StringSelection(copyCheckResultToClipboardJQuery)
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard()
@@ -133,7 +137,7 @@ var test = document.getElementsByClassName("awsui").length > 0;
         String clipboardData = (String) Toolkit.getDefaultToolkit()
                 .getSystemClipboard().getData(DataFlavor.stringFlavor)
         def result = 'true' == clipboardData
-        println("On the right console page - $result")
+        log.info("On the right console page - $result")
         result
     }
 

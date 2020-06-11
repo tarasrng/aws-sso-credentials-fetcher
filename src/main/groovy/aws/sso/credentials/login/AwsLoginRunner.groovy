@@ -1,8 +1,13 @@
 package aws.sso.credentials.login
 
+import aws.sso.credentials.utils.LoggerResolver
+import ch.qos.logback.classic.Logger
+
 import java.awt.*
 
 class AwsLoginRunner {
+    private static Logger log = LoggerResolver.getLogger(AwsLoginRunner.class)
+
     private final static long MAX_SSO_LOGIN_WAIT_TIME_MILLIS = 90_000
     private final static long WAIT_TIME_BEFORE_AUTO_CLICKING_AUTH_BUTTON_MILLIS = 15_000
     private final static long WAIT_TIME_BEFORE_AUTO_CLOSING_CONSOLE_MILLIS = 15_000
@@ -10,7 +15,7 @@ class AwsLoginRunner {
 
     def runSSOLogin() {
         def executionOutput = new StringBuilder(), executionErrors = new StringBuilder()
-        println 'Executing aws sso login to cache access token'
+        log.info 'Executing aws sso login to cache access token'
         def proc = 'aws sso login'.execute()
         proc.consumeProcessOutput(executionOutput, executionErrors)
 
@@ -22,12 +27,12 @@ class AwsLoginRunner {
         //wait for click task to finish
         Thread.sleep(4_000)
         clickAuthorizeButtonTask.interrupt()
-        println 'AWS CLI execution output:'
-        println(executionOutput)
+        log.info 'AWS CLI execution output:'
+        log.info(executionOutput.toString())
         if (!executionErrors.toString().isEmpty()) {
             throw new RuntimeException("aws so login command failed. ${executionErrors.toString()}")
         }
-        println 'Executing aws sts get-caller-identity to cache access keys and session token'
+        log.info 'Executing aws sts get-caller-identity to cache access keys and session token'
         proc = 'aws sts get-caller-identity'.execute()
         executionOutput = new StringBuilder()
         executionErrors = new StringBuilder()
@@ -44,7 +49,7 @@ class AwsLoginRunner {
 
         sleep(WAIT_TIME_BEFORE_AUTO_CLOSING_CONSOLE_MILLIS) { e ->
             assert e in InterruptedException
-            println 'Authorized button was pressed manually'
+            log.info 'Authorized button was pressed manually'
             interrupted = true
             true
         }
@@ -62,7 +67,7 @@ class AwsLoginRunner {
             pageIsCorrect = chromeController.checkIfConsolePageIsCorrect()
         }
         if (!pageIsCorrect) {
-            println 'Few page checks failed. Can\'t close tab. '
+            log.info 'Few page checks failed. Can\'t close tab. '
             return
         }
         chromeController.toggleConsole()
@@ -76,7 +81,7 @@ class AwsLoginRunner {
                 desktop.browse(uri)
                 return true
             } catch (Exception e) {
-                e.printStackTrace()
+                log.error('Failed to open uri', e)
             }
         }
         return false
@@ -86,7 +91,7 @@ class AwsLoginRunner {
         boolean interrupted = false
         sleep(WAIT_TIME_BEFORE_AUTO_CLICKING_AUTH_BUTTON_MILLIS) { e ->
             assert e in InterruptedException
-            println 'Authorized button was pressed manually'
+            log.info 'Authorized button was pressed manually'
             interrupted = true
             true
         }
@@ -103,7 +108,7 @@ class AwsLoginRunner {
             pageIsCorrect = chromeController.checkIfAuthPageIsCorrect()
         }
         if (!pageIsCorrect) {
-            println 'Few page checks failed. Can\'t automate authorize button click. '
+            log.info 'Few page checks failed. Can\'t automate authorize button click. '
             return
         }
         chromeController.clickAuthButton()

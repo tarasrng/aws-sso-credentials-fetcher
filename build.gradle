@@ -10,6 +10,10 @@ repositories {
 dependencies {
 	compile 'org.codehaus.groovy:groovy-all:3.0.3'
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.10'
+    compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
+    compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
+
+
 }
 
 task uberjar(type: Jar, dependsOn:compileGroovy) {
